@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "VersionKit",
+        "repositoryURL": "https://github.com/TheAngryDarling/VersionKit.git",
+        "state": {
+          "branch": null,
+          "revision": "49a7cd45d7b033464471a769c124bc63433676f7",
+          "version": "1.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
