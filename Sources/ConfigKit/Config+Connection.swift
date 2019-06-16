@@ -10,10 +10,8 @@ import Foundation
 
 public extension Config {
     
-    /**
-     And structure containing connection configuration information
-     This is helpful for storing and accessing connections to web services, or database
-    */
+    /// And structure containing connection configuration information
+    /// This is helpful for storing and accessing connections to web services, or database
     public struct Connection: Codable {
         
         private enum CodingKeys: String, CodingKey {
@@ -23,13 +21,12 @@ public extension Config {
             case properties
         }
         
-        /**
-         Stores the credentials for the connection
-         
-            - userNameAndPassword: User name and password for this connection
-            - apikey: ApiKey for this connection
-            - none: Indicates there are no credentials for this connection
-        */
+        
+        /// Stores the credentials for the connection
+        ///
+        ///    - userNameAndPassword: User name and password for this connection
+        ///    - apikey: ApiKey for this connection
+        ///    - none: Indicates there are no credentials for this connection
         public enum Credentials {
             /// User name and password for this connection
             case userNameAndPassword(username: String, password: String)
@@ -40,12 +37,9 @@ public extension Config {
             /// Indicates there are no credentials for this connection
             case none
             
-            /**
-            The username and passsword if the credentials are set as such
-             
-             - returns:
-             Returns a turple with the user name and password of the credentials are set as such, otherwise returns nil
-            */
+            
+            /// The username and passsword if the credentials are set as such
+            ///
             public var usernameAndPasswordValue: (username: String, password: String)? {
                 switch self {
                     case .userNameAndPassword(let u, let p): return (username: u, password: p)
@@ -55,12 +49,7 @@ public extension Config {
                 }
             }
             
-            /**
-             The apikey if the credentials are set as such
-             
-             - returns:
-             Returns a string containing the apikey of the credentials are set as such, otherwise returns nil
-             */
+            /// The apikey if the credentials are set as such
             public var apikeyValue: String? {
                 switch self {
                     case .userNameAndPassword(_, _): return nil
@@ -77,18 +66,28 @@ public extension Config {
             }
         }
         
-        // Name of the connection
+        /// Name of the connection
         public let name: String
-        // Address of the connection (Could be a web service, or a database uri, etc)
+        /// Address of the connection (Could be a web service, or a database uri, etc)
         public let uri: String
-        // Connection credentials
+        /// Connection credentials
         public let credentials: Credentials
-        // Stores additional properties for this connection
+        /// Stores additional properties for this connection
         internal let properties: [String: String]
-        //Gives a list of all the additional property keys
+        /// Gives a list of all the additional property keys
         public var propertyKeys: [String] { return self.properties.keys.compactMap({ $0 }) }
         
-        public init(name: String, uri: String, credentials: Credentials = .none, properties: [String: String] = [:]) {
+        /// Create a new instance of Connection
+        ///
+        /// - Parameters:
+        ///   - name: Name of the connection
+        ///   - uri: URI of the connection
+        ///   - credentials: Credentials of the connection
+        ///   - properties: Other properties pertaining the connection
+        public init(name: String,
+                    uri: String,
+                    credentials: Credentials = .none,
+                    properties: [String: String] = [:]) {
             self.name = name
             self.uri = uri
             self.credentials = credentials
@@ -111,30 +110,23 @@ public extension Config {
             if self.properties.count > 0 { try container.encode(self.properties, forKey: .properties) }
         }
         
-        /**
-        A method for accessing the additional property values.
-        
-         - parameters:
-            - withName: Name of property to access
-         
-         - returns:
-         Returns an object dynamically converted to the type you specify or nil if the property does not exist
-         
-        */
+        /// A method for accessing the additional property values.
+        ///
+        /// - parameter name: Name of property to access
+        ///
+        /// - returns: Returns an object dynamically converted to the type you specify or nil if the property does not exist
         public func getProperty<T>(withName name: String) -> T? where T: LosslessStringConvertible {
             guard let v = self.properties[name] else { return nil }
             return T.init(v)
         }
         
-        /**
-         Wrapped method for getParameter explicitly to get boolean values.
-         If the parameter does not exist or is not convertable to a bool this will return false
-         
-         - parameters:
-            - withName: Name of parameter to access
-         - returns:
-         Returns true if the property exists and the value is conerted to a bool with true as the results, otherwise this method returns false.
-         */
+        /// Wrapped method for getParameter explicitly to get boolean values.
+        ///
+        /// If the parameter does not exist or is not convertable to a bool this will return false
+        ///
+        /// - parameter name: Name of parameter to access
+        ///
+        /// - returns: Returns true if the property exists and the value is conerted to a bool with true as the results, otherwise this method returns false.
         public func getBoolProperty(withName name: String) -> Bool {
             guard let b: Bool = self.getProperty(withName: name) else { return false }
             return b
@@ -179,23 +171,21 @@ extension Config.Connection.Credentials: Codable {
 }
 
 extension Config.Connection {
-    /**
-     Takes in a dictionary of values and extracts any that are in the connection format and creates connection objects.
-     After all connections are extracted, this function will return a new dictionary removing the values it used to create the connection objects as well as an array of the newly created connection objects.
-     The format for propertyes in the dictionary to be picked up as connection objects is as follows:
-         {name}:connection_uri=value *Required
-         {name}:connection_auth_username=value
-         {name}:connection_auth_password=value
-         {name}:connection_auth_apikey=value
-         This also supports adding connection parameters using the following format:
-         {name}:connection_param:{param_name}=value
-     
-     - parameters:
-        - kv: Dictionary of properties
-     
-     - returns:
-     Returns a new dictionary removing any properties used in the creation of connection as well as an array of newly created connections
-    */
+    
+    /// Takes in a dictionary of values and extracts any that are in the connection format and creates connection objects.
+    ///
+    /// After all connections are extracted, this function will return a new dictionary removing the values it used to create the connection objects as well as an array of the newly created connection objects.
+    /// The format for propertyes in the dictionary to be picked up as connection objects is as follows:
+    ///  - {name}:connection_uri=value *Required
+    ///  - {name}:connection_auth_username=value
+    ///  - {name}:connection_auth_password=value
+    ///  - {name}:connection_auth_apikey=value
+    ///  -  This also supports adding connection parameters using the following format:
+    ///  - {name}:connection_param:{param_name}=value
+    ///
+    /// - parameter kv:Dictionary of properties
+    ///
+    /// - returns: Returns a new dictionary removing any properties used in the creation of connection as well as an array of newly created connections
     internal static func filterFromKeyValuePairs(_ kv: [String: String]) -> (kv: [String: String], connections: [Config.Connection]) {
         var properties: [String: String] = kv
         var connections: [Config.Connection] = []

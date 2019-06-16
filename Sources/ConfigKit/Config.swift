@@ -64,47 +64,40 @@ public final class Config: Codable {
         }
     }
     
-    // Returns the connection with the provided name or nil if the connection is not found
+    /// Returns the connection with the provided name or nil if the connection is not found
     public func getConnection(withName name: String) -> Connection? {
         return self.connections.first(where: { $0.name == name })
     }
     
-    /**
-     A method for accessing the additional property values.
-     
-     - parameters:
-        - withName: Name of parameter to access
-     
-     - returns:
-     Returns an object dynamically converted to the type you specify or nil if the property does not exist
-     
-     */
+    
+    /// A method for accessing the additional property values.
+    ///
+    /// - parameter name: Name of parameter to access
+    ///
+    /// - returns: Returns an object dynamically converted to the type you specify or nil if the property does not exist
     public func getProperty<T>(withName name: String) -> T? where T: LosslessStringConvertible {
         guard let v = self.properties[name] else { return nil }
         return T.init(v)
     }
     
-    /**
-     Wrapped method for getParameter explicitly to get boolean values.
-     If the parameter does not exist or is not convertable to a bool this will return false
-     
-     - parameters:
-        - withName: Name of parameter to access
-     - returns:
-     Returns true if the property exists and the value is conerted to a bool with true as the results, otherwise this method returns false.
-    */
+    
+    /// Wrapped method for getParameter explicitly to get boolean values.
+    /// If the parameter does not exist or is not convertable to a bool this will return false
+    ///
+    /// - parameter name: Name of parameter to access
+    /// - returns: Returns true if the property exists and the value is conerted to a bool with true as the results, otherwise this method returns false
     public func getBoolProperty(withName name: String) -> Bool {
         guard let b: Bool = self.getProperty(withName: name) else { return false }
         return b
     }
     
-    // Returns the contact with the provided name or nil of the contact is not found
+    /// Returns the contact with the provided name or nil of the contact is not found
     public func getContact(withName name: String) -> Contact? {
         return self.contacts.first(where: { $0.name == name })
     }
     
     
-    // Merges the provied configuration with the current configuration overwriting any existing values
+    /// Merges the provied configuration with the current configuration overwriting any existing values
     public func merge(with config: Config) {
         
         for (k, v) in config.properties {
@@ -112,12 +105,20 @@ public final class Config: Codable {
         }
         
         for c in config.connections {
+            // Remove prevously loaded connection if one was there
+            self.connections.removeAll(where: { return $0.name == c.name } )
             self.addConnection(c)
+        }
+        
+        for c in config.contacts {
+            // Remove prevously loaded contact if one was there
+            self.contacts.removeAll(where: { return $0.name == c.name } )
+            self.addContact(c)
         }
     }
     
     
-    // Manually add a connection to the configuration
+    /// Manually add a connection to the configuration
     public func addConnection( _ connection: Connection) {
         
         //We must remove previous connections with same name
@@ -128,12 +129,12 @@ public final class Config: Codable {
         
     }
     
-    // Manually add a property to the configuration
+    /// Manually add a property to the configuration
     public func addProperty(_ value: String, withName name: String) {
         self.properties[name] = value
     }
     
-    //Manually add a contact to the configuration
+    /// Manually add a contact to the configuration
     public func addContact( _ contact: Contact) {
         //We must remove previous contact with same name
         while let idx = self.contacts.index(where: { $0.name == contact.name}) {
