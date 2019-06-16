@@ -3,8 +3,18 @@ import XCTest
 
 final class ConfigKitTests: XCTestCase {
     
+    
+    static let packageRootPath: String = String(URL(fileURLWithPath: #file).pathComponents
+        .prefix(while: { $0 != "Tests" }).joined(separator: "/").dropFirst())
+    
+    static let testPackageRootPath: String = packageRootPath + "/Tests"
+    static let testPackagePath: String = String(URL(fileURLWithPath: #file).pathComponents.dropLast().joined(separator: "/").dropFirst())
+    static let testPackageResourcePath: String = testPackageRootPath + "/resources"
+    
+    
     static let config_str: String = "{}"
-    static let CONFIG_PATH: String = "~/development/swift/config/unit_test_config.json"
+    
+    static let CONFIG_PATH: String =  testPackageResourcePath.appending("/unit_test_config.json")
     
     
     func testGenerateConnection() {
