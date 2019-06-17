@@ -4,7 +4,7 @@
 ![Linux](https://img.shields.io/badge/os-linux-green.svg?style=flat)
 ![Apache 2](https://img.shields.io/badge/license-Apache2-blue.svg?style=flat)
 
-Structure for loading configuration details from file, environment, or commaind line
+Structure for loading configuration details from file, environment, or command line
 
 ## Usage
 ```Swift
