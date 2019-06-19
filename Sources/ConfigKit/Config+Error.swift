@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension Config {
+extension Config {
     /// Possible local errors thrown by the Config load functions
     ///
     /// - unknownConfigType: Unable to figure out how to parse the file.  File stored within enum
