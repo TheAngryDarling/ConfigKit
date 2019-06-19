@@ -8,7 +8,7 @@
 import Foundation
 
 
-public extension Config {
+extension Config {
     
     /// And structure containing connection configuration information
     /// This is helpful for storing and accessing connections to web services, or database
