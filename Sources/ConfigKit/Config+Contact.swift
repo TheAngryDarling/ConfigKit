@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension Config {
+extension Config {
     
     public struct Contact: Codable {
         
