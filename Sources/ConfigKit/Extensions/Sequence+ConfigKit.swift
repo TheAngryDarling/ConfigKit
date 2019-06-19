@@ -21,7 +21,7 @@ internal extension Sequence {
 }
 
 internal extension Array {
-    #if !swift(>=4.1)
+    #if !swift(>=4.1.4)
     mutating func removeAll(where predicate: (Element) throws -> Bool) rethrows {
         var idx = self.startIndex
         while idx < self.endIndex {
