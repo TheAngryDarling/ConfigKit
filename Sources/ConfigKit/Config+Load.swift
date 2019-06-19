@@ -8,7 +8,7 @@
 import Foundation
 import Dispatch
 
-public extension Config {
+extension Config {
     
     /// Loads a configuration file from the given path. (Must be a .json or .plist file)
     /// Any objects with the same name as objects comming in from the load function will be replaced
