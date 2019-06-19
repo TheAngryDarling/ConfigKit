@@ -8,7 +8,7 @@
 import Foundation
 
 
-public extension Config {
+extension Config {
     
     /// Coding indicator.  Used to indicate which type of coder to use when encoding and decoding configuration data
     /// - json: Used to read from and write to json data.
@@ -16,7 +16,7 @@ public extension Config {
     public enum ConfigCodingType {
         /// json coder.  Used to read from and write to json data.
         case json
-        #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=4.1)
+        #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=5.0.2)
         /// plist coder. Used to read from and write to plist data. (Currently only suppored on the mac/iOS/tvOS platforms)
         case plist
         #endif
@@ -25,7 +25,7 @@ public extension Config {
         public static func getType(fromExtension ext: String?) -> ConfigCodingType? {
             guard let val = ext else { return nil }
             if val == "json" { return .json }
-           #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=4.1)
+           #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=5.0.2)
             if val == "plist" { return .plist }
             #endif
             return nil
@@ -35,7 +35,7 @@ public extension Config {
         public static func getType(fromMimeType mime: String?) -> ConfigCodingType? {
             guard let val = mime else { return nil }
             if val == "application/json" { return .json }
-            #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=4.1)
+            #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=5.0.2)
             if val == "application/x-plist" { return .plist }
             #endif
             return nil
@@ -44,7 +44,7 @@ public extension Config {
         
         /// Returns the Decoder for the given coder type
         internal func getDecoder() -> ConfigDecoder {
-            #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=4.1)
+            #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=5.0.2)
             switch self {
                 case .json: return JSONDecoder()
                 case .plist: return PropertyListDecoder()
@@ -59,7 +59,7 @@ public extension Config {
         /// Returns the Encoder for the given coder type
         internal func getEncoder() -> ConfigEncoder {
             
-            #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=4.1)
+            #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=5.0.2)
             switch self {
                 case .json: return JSONEncoder()
                 case .plist: return PropertyListEncoder()
@@ -84,7 +84,7 @@ internal protocol ConfigEncoder {
 
 extension JSONDecoder: ConfigDecoder { }
 extension JSONEncoder: ConfigEncoder { }
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=4.1)
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || swift(>=5.0.2)
 extension PropertyListDecoder: ConfigDecoder { }
 extension PropertyListEncoder: ConfigEncoder { }
 #endif
